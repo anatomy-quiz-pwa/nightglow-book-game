@@ -40,7 +40,13 @@ export class WorldScene extends Phaser.Scene {
     // 地圖：1536×1024，中心點 (768, 512)
     const mapExists = this.textures.exists("map");
     if (mapExists) {
-      const map = this.add.image(768, 512, "map");
+      const map = this.add.image(768, 512, "map").setDepth(0);
+      // 覆蓋地圖中心可能殘留的黃色佔位區（舊夜光咖啡館位置）
+      const patch = this.add
+        .image(768, 512, "map")
+        .setCrop(668, 432, 200, 160)
+        .setDisplaySize(200, 160)
+        .setDepth(1);
     } else {
       // Placeholder：地圖載入失敗時
       const bg = this.add.rectangle(768, 512, MAP_WIDTH, MAP_HEIGHT, 0x0f172a, 1);
