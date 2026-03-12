@@ -22,7 +22,7 @@ export function createPhaserGame(
       arcade: { debug: false },
     },
     scene: [
-      { key: "BootScene", scene: BootScene, data: { onCharacterClick } },
+      { key: "BootScene", scene: BootScene, data: { onCharacterClick } } as Phaser.Types.Scenes.SettingsConfig,
       WorldScene,
     ],
   };
