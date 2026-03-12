@@ -2,8 +2,6 @@ import * as Phaser from "phaser";
 import { CharacterSprite } from "./CharacterSprite";
 import {
   AREA_POSITIONS,
-  BUILDING_PROXIMITY_RANGE,
-  BUILDING_WHATSUP_CAFE,
   CHARACTER_MAP_SPRITES,
   DEFAULT_AREA,
 } from "./config";
@@ -19,12 +17,6 @@ export interface SpawnCharacter extends Character {
 export class WorldScene extends Phaser.Scene {
   private characters: CharacterSprite[] = [];
   private onCharacterClick?: (character: Character) => void;
-
-  // WhatsUpCafe / 夜光咖啡館 互動建築（僅在有圖檔時顯示）
-  private cafeBuilding?: Phaser.GameObjects.Image;
-  private cafeGlow: Phaser.FX.Controller | null = null;
-  private cafePromptText?: Phaser.GameObjects.Text;
-  private isNearCafe = false;
 
   constructor() {
     super({ key: "WorldScene" });
@@ -42,8 +34,6 @@ export class WorldScene extends Phaser.Scene {
     Object.entries(CHARACTER_MAP_SPRITES).forEach(([name, path]) => {
       this.load.image(`char_${name}`, path);
     });
-    // WhatsUpCafe 建築（可將圖檔放 public/buildings/whatsup_cafe.png）
-    this.load.image("whatsup_cafe", "/buildings/whatsup_cafe.png");
   }
 
   create() {
@@ -91,83 +81,9 @@ export class WorldScene extends Phaser.Scene {
       this.spawnCharacters(initialChars);
     }
 
-    // 夜光咖啡館建築：若有圖檔則顯示，否則不顯示（避免黃色佔位方塊）
-    if (this.textures.exists("whatsup_cafe")) {
-      this.createWhatsUpCafeBuilding();
-      this.setupCafeInteraction();
-    }
   }
 
-  update() {
-    if (this.cafeBuilding) this.updateCafeProximity();
-  }
-
-  private createWhatsUpCafeBuilding() {
-    const { x, y } = BUILDING_WHATSUP_CAFE;
-
-    this.cafeBuilding = this.add
-      .image(x, y, "whatsup_cafe")
-      .setDisplaySize(120, 80)
-      .setOrigin(0.5, 1)
-      .setDepth(10);
-
-    // 浮動提示文字（初始隱藏）
-    this.cafePromptText = this.add
-      .text(x, y - 80, "Press E to enter", {
-        fontSize: "16px",
-        color: "#fbbf24",
-        fontStyle: "bold",
-      })
-      .setOrigin(0.5)
-      .setDepth(100)
-      .setVisible(false);
-  }
-
-  private setupCafeInteraction() {
-    this.input.keyboard?.on("keydown-E", () => {
-      if (this.isNearCafe) {
-        console.log("Entering What's Up Cafe");
-        this.events.emit("enterCafe");
-      }
-    });
-  }
-
-  private updateCafeProximity() {
-    if (!this.cafeBuilding) return;
-    const cam = this.cameras.main;
-    const playerX = cam.scrollX + cam.width / (2 * cam.zoom);
-    const playerY = cam.scrollY + cam.height / (2 * cam.zoom);
-
-    const dx = this.cafeBuilding.x - playerX;
-    const dy = this.cafeBuilding.y - playerY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    const wasNear = this.isNearCafe;
-    this.isNearCafe = distance < BUILDING_PROXIMITY_RANGE;
-
-    if (this.isNearCafe) {
-      this.cafePromptText?.setVisible(true);
-      if (this.cafePromptText) {
-        this.cafePromptText.x = this.cafeBuilding.x;
-        this.cafePromptText.y = this.cafeBuilding.y - 80;
-      }
-
-      if (!wasNear) {
-        try {
-          this.cafeGlow = this.cafeBuilding.postFX.addGlow(0xffd54f, 6);
-        } catch {
-          // WebGL 不可用時略過
-        }
-      }
-    } else {
-      this.cafePromptText?.setVisible(false);
-
-      if (wasNear && this.cafeGlow) {
-        this.cafeBuilding.postFX.remove(this.cafeGlow);
-        this.cafeGlow = null;
-      }
-    }
-  }
+  update() {}
 
   spawnCharacters(characters: SpawnCharacter[]) {
     // 清除舊角色
