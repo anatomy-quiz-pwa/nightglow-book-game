@@ -106,7 +106,9 @@ export default function UnlockPage() {
     );
   }
 
-  const cardFrontPath = character ? CHARACTER_CARD_FRONT[character.name] : null;
+  const cardFrontPath = character
+    ? (CHARACTER_CARD_FRONT[character.name] ?? character.image)
+    : null;
   const choices = [
     { key: "A" as const, label: character?.choice_a },
     { key: "B" as const, label: character?.choice_b },

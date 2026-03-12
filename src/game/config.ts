@@ -44,14 +44,14 @@ export const BUILDING_PROXIMITY_RANGE = 120;
 // 解鎖頁：角色卡片背面（掃描 QR 後先看到）
 export const CARD_BACK_PATH = "/characters/cards/back/card%20back.png";
 
-// 解鎖頁：角色卡片正面（答對後顯示）
+// 解鎖頁：角色卡片正面（答對後顯示）- 對應 public/characters/cards/front/
 export const CHARACTER_CARD_FRONT: Record<string, string> = {
-  神經指揮家: "/characters/Neural%20Conductor.webp",
-  筋膜旅者: "/characters/Fascia%20Walker.webp",
-  步態工程師: "/characters/Gait%20Engineer.webp",
-  彈性守護者: "/characters/map/Elastic%20Guardian.png",
-  演化觀察者: "/characters/Evolution%20Watcher.webp",
-  典藏守書人: "/characters/Archive%20Keeper.webp",
+  神經指揮家: "/characters/cards/front/Neural%20Conductor.webp",
+  筋膜旅者: "/characters/cards/front/Fascia%20Walker.webp",
+  步態工程師: "/characters/cards/front/Gait%20Engineer.webp",
+  彈性守護者: "/characters/cards/front/Elastic%20Guardian.webp",
+  演化觀察者: "/characters/cards/front/Evolution%20Watcher.webp",
+  典藏守書人: "/characters/cards/front/Archive%20Keeper.png",
 };
 
 // 地圖上小人：對應 public/characters/map/
