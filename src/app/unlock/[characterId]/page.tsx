@@ -145,7 +145,7 @@ export default function UnlockPage() {
             />
           </div>
 
-          {/* 卡片正面：答對後顯示，人物圖 + 人物介紹 */}
+          {/* 卡片正面：答對後顯示，人物圖 + 角色名稱 */}
           <div
             className="absolute inset-0 overflow-hidden rounded-2xl shadow-xl"
             style={{
@@ -159,23 +159,29 @@ export default function UnlockPage() {
                 <img
                   src={cardFrontPath.replace(/%20/g, " ")}
                   alt={character?.name ?? ""}
-                  className="h-[260px] w-full object-cover"
+                  className="h-[320px] w-full object-cover"
                 />
               ) : (
-                <div className="flex h-[260px] w-full items-center justify-center bg-slate-800 text-amber-200">
+                <div className="flex h-[320px] w-full items-center justify-center bg-slate-800 text-amber-200">
                   {character?.name}
                 </div>
               )}
-              <div className="flex flex-1 flex-col justify-end bg-slate-800/95 px-4 py-4">
+              <div className="flex flex-1 flex-col justify-center bg-slate-800/95 px-4 py-3">
                 <p className="text-center font-bold text-amber-200">{character?.name}</p>
-                <p className="mt-2 text-center text-sm leading-relaxed text-slate-400">
-                  {character?.background_story ?? character?.description}
-                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* 答對後：正面卡片下方顯示背景介紹 */}
+      {showFront && (character?.background_story ?? character?.description) && (
+        <div className="mb-6 w-full max-w-md rounded-xl bg-slate-800/80 px-6 py-4">
+          <p className="text-center text-sm leading-relaxed text-slate-300">
+            {character?.background_story ?? character?.description}
+          </p>
+        </div>
+      )}
 
       {(status === "correct" || status === "entering") ? (
         <div className="mb-6 w-full max-w-md rounded-xl bg-amber-500/20 px-6 py-4 text-center">
