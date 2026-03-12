@@ -20,10 +20,10 @@ export class WorldScene extends Phaser.Scene {
   private characters: CharacterSprite[] = [];
   private onCharacterClick?: (character: Character) => void;
 
-  // WhatsUpCafe / 夜光咖啡館 互動建築
-  private cafeBuilding!: Phaser.GameObjects.Image;
+  // WhatsUpCafe / 夜光咖啡館 互動建築（僅在有圖檔時顯示）
+  private cafeBuilding?: Phaser.GameObjects.Image;
   private cafeGlow: Phaser.FX.Controller | null = null;
-  private cafePromptText!: Phaser.GameObjects.Text;
+  private cafePromptText?: Phaser.GameObjects.Text;
   private isNearCafe = false;
 
   constructor() {
@@ -91,28 +91,19 @@ export class WorldScene extends Phaser.Scene {
       this.spawnCharacters(initialChars);
     }
 
-    // === WhatsUpCafe 互動建築 ===
-    this.createWhatsUpCafeBuilding();
-    this.setupCafeInteraction();
+    // 夜光咖啡館建築：若有圖檔則顯示，否則不顯示（避免黃色佔位方塊）
+    if (this.textures.exists("whatsup_cafe")) {
+      this.createWhatsUpCafeBuilding();
+      this.setupCafeInteraction();
+    }
   }
 
   update() {
-    this.updateCafeProximity();
+    if (this.cafeBuilding) this.updateCafeProximity();
   }
 
   private createWhatsUpCafeBuilding() {
     const { x, y } = BUILDING_WHATSUP_CAFE;
-
-    // 若無 whatsup_cafe 圖檔則用 placeholder
-    if (!this.textures.exists("whatsup_cafe")) {
-      const g = this.add.graphics();
-      g.fillStyle(0x8b4513, 0.9);
-      g.fillRoundedRect(0, 0, 120, 80, 8);
-      g.fillStyle(0xfbbf24, 1);
-      g.fillRect(40, 20, 40, 50);
-      g.generateTexture("whatsup_cafe", 120, 80);
-      g.destroy();
-    }
 
     this.cafeBuilding = this.add
       .image(x, y, "whatsup_cafe")
@@ -142,6 +133,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private updateCafeProximity() {
+    if (!this.cafeBuilding) return;
     const cam = this.cameras.main;
     const playerX = cam.scrollX + cam.width / (2 * cam.zoom);
     const playerY = cam.scrollY + cam.height / (2 * cam.zoom);
@@ -154,9 +146,11 @@ export class WorldScene extends Phaser.Scene {
     this.isNearCafe = distance < BUILDING_PROXIMITY_RANGE;
 
     if (this.isNearCafe) {
-      this.cafePromptText.setVisible(true);
-      this.cafePromptText.x = this.cafeBuilding.x;
-      this.cafePromptText.y = this.cafeBuilding.y - 80;
+      this.cafePromptText?.setVisible(true);
+      if (this.cafePromptText) {
+        this.cafePromptText.x = this.cafeBuilding.x;
+        this.cafePromptText.y = this.cafeBuilding.y - 80;
+      }
 
       if (!wasNear) {
         try {
@@ -166,7 +160,7 @@ export class WorldScene extends Phaser.Scene {
         }
       }
     } else {
-      this.cafePromptText.setVisible(false);
+      this.cafePromptText?.setVisible(false);
 
       if (wasNear && this.cafeGlow) {
         this.cafeBuilding.postFX.remove(this.cafeGlow);
