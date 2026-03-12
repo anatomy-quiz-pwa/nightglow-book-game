@@ -197,20 +197,29 @@ export default function UnlockPage() {
             </span>
           </p>
           <div className="mb-3 space-y-2">
-            {choices.map(({ key, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setSelectedChoice(key)}
-                className={`block w-full rounded-lg border px-4 py-2 text-left text-sm transition-colors ${
-                  selectedChoice === key
-                    ? "border-amber-500 bg-amber-500/20 text-amber-200"
-                    : "border-slate-600 bg-slate-700 text-slate-300 hover:border-slate-500"
-                }`}
-              >
-                <span className="font-bold text-amber-400">{key}.</span> {label}
-              </button>
-            ))}
+            {choices.length > 0 ? (
+              choices.map(({ key, label }) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setSelectedChoice(key)}
+                  className={`block w-full rounded-lg border px-4 py-2 text-left text-sm transition-colors ${
+                    selectedChoice === key
+                      ? "border-amber-500 bg-amber-500/20 text-amber-200"
+                      : "border-slate-600 bg-slate-700 text-slate-300 hover:border-slate-500"
+                  }`}
+                >
+                  <span className="font-bold text-amber-400">{key}.</span> {label}
+                </button>
+              ))
+            ) : (
+              <div className="rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+                <p className="font-medium">尚未設定選擇題選項</p>
+                <p className="mt-1 text-amber-200/80">
+                  請在 Supabase Dashboard → SQL Editor 執行 <code className="rounded bg-slate-700 px-1">supabase/run_choices_migration.sql</code>
+                </p>
+              </div>
+            )}
           </div>
           {message && status === "error" && (
             <p className="mb-2 text-sm text-red-400">{message}</p>
