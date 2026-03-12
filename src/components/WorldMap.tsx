@@ -82,9 +82,9 @@ export function WorldMap() {
       <div ref={containerRef} className="h-full w-full" />
       <a
         href="/qr"
-        className="absolute right-4 top-4 z-10 rounded-lg bg-amber-600/90 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors hover:bg-amber-500"
+        className="absolute right-4 top-4 z-[9999] rounded-lg bg-amber-600 px-4 py-2.5 text-sm font-bold text-white shadow-xl ring-2 ring-amber-400/50 transition-colors hover:bg-amber-500"
       >
-        角色卡 QR Code
+        📋 角色卡 QR Code
       </a>
       {selectedCharacter && (
         <CharacterPopup
