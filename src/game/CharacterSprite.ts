@@ -6,12 +6,12 @@ export interface CharacterSpriteData extends Character {
   onCharacterClick?: (character: Character) => void;
 }
 
-const SPRITE_SIZE = 64; // 地圖上的角色顯示尺寸
+const SPRITE_SIZE = 32; // 地圖上的角色顯示尺寸（縮小為一半）
 
 // 陰影參數
-const SHADOW_OFFSET_Y = 12;
-const SHADOW_WIDTH = 40;
-const SHADOW_HEIGHT = 14;
+const SHADOW_OFFSET_Y = 6;
+const SHADOW_WIDTH = 20;
+const SHADOW_HEIGHT = 7;
 const SHADOW_ALPHA = 0.35;
 
 export class CharacterSprite extends Phaser.GameObjects.Container {
@@ -60,9 +60,9 @@ export class CharacterSprite extends Phaser.GameObjects.Container {
       this.add(img);
     } else {
       // Fallback：無圖檔時用簡單圖形
-      const body = scene.add.circle(0, -SPRITE_SIZE / 2, 20, 0x4ade80, 1);
+      const body = scene.add.circle(0, -SPRITE_SIZE / 2, 10, 0x4ade80, 1);
       body.setStrokeStyle(2, 0x22c55e);
-      const head = scene.add.circle(0, -SPRITE_SIZE / 2 - 16, 12, 0xfbbf24, 1);
+      const head = scene.add.circle(0, -SPRITE_SIZE / 2 - 8, 6, 0xfbbf24, 1);
       head.setStrokeStyle(2, 0xf59e0b);
       this.add([body, head]);
     }
@@ -108,7 +108,7 @@ export class CharacterSprite extends Phaser.GameObjects.Container {
     const text = `${name}：\n「${dialogue}」`;
 
     const bubble = this.scene.add
-      .container(this.x, this.y - SPRITE_SIZE - 20)
+      .container(this.x, this.y - SPRITE_SIZE - 10)
       .setDepth(1000);
 
     const label = this.scene.add
