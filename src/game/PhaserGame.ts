@@ -1,4 +1,5 @@
 import * as Phaser from "phaser";
+import { BootScene } from "./BootScene";
 import { WorldScene } from "./WorldScene";
 import type { Character } from "@/types/database";
 
@@ -20,12 +21,13 @@ export function createPhaserGame(
       default: "arcade",
       arcade: { debug: false },
     },
-    scene: [WorldScene],
+    scene: [
+      { key: "BootScene", scene: BootScene, data: { onCharacterClick } },
+      WorldScene,
+    ],
   };
 
-  const game = new Phaser.Game(config);
-  game.registry.set("onCharacterClick", onCharacterClick);
-  return game;
+  return new Phaser.Game(config);
 }
 
 export type { WorldScene } from "./WorldScene";
